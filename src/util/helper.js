@@ -14,7 +14,8 @@ const days_difference = time_difference / (1000 * 60 * 60 * 24);
 const weekDifference = Math.floor(days_difference / 7)
 
 module.exports.getBatchInfo = ( ) =>{
-        return `Thorium, W${weekDifference}D${day}, the topic for today is Nodejs module system`;
+        return `Thorium, W${weekDifference}D${day}, the topic for today 
+        is Nodejs module system`;
 
 
 }
