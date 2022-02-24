@@ -1,6 +1,65 @@
 const express = require('express');
 const router = express.Router();
 
+
+
+
+
+
+// ASSIGNMENT:
+// you will be given an array of persons ( i.e an array of objects )..each person will have  a {name: String , age: Number, votingStatus: true/false(Boolean)}
+// take input in query param as votingAge..and for all the people above that age, change votingStatus as true
+// also return an array consisting of only the person that can vote
+
+//  take this as sample for array of persons:
+
+let persons= [
+    {
+    name: "PK",
+    age: 10,
+    votingStatus: false
+},
+{
+    name: "SK",
+    age: 20,
+    votingStatus: false
+},
+{
+    name: "AA",
+    age: 70,
+    votingStatus: false
+},
+{
+    name: "SC",
+    age: 5,
+    votingStatus: false
+},
+{
+    name: "HO",
+    age: 40,
+    votingStatus: false
+}
+]
+
+router.post("/voting-age/", (req,res) =>{
+    let setAgeLimit = req.query.setAgeLimit ;
+    // const result = persons.filter((personObj,index,array) =>{
+    //     if(personObj.age > setAgeLimit){personObj.votingStatus = true;return array}})
+    
+    const result = persons.filter((personObj,index,array) =>personObj.age > setAgeLimit ? personObj.votingStatus = true : "")
+    
+    
+
+    res.send(result);
+    
+})
+
+
+
+
+
+
+
 // QUERY PARAMS
 // localhost:3000/get-query-1?myCoolVar=24&xyz=hiFunctionUP
 router.get("/get-query-1", function (req, res) {
@@ -42,42 +101,6 @@ router.post("/post-query-2", function (req, res) {
     // }
     res.send({ result: finalArr , status: true })
 })
-
-
-// ASSIGNMENT:
-// you will be given an array of persons ( i.e an array of objects )..each person will have  a {name: String , age: Number, votingStatus: true/false(Boolean)}
-// take input in query param as votingAge..and for all the people above that age, change votingStatus as true
-// also return an array consisting of only the person that can vote
-
-//  take this as sample for array of persons:
-// let persons= [
-//     {
-//     name: "PK",
-//     age: 10,
-//     votingStatus: false
-// },
-// {
-//     name: "SK",
-//     age: 20,
-//     votingStatus: false
-// },
-// {
-//     name: "AA",
-//     age: 70,
-//     votingStatus: false
-// },
-// {
-//     name: "SC",
-//     age: 5,
-//     votingStatus: false
-// },
-// {
-//     name: "HO",
-//     age: 40,
-//     votingStatus: false
-// }
-// ]
-
 
 
 
