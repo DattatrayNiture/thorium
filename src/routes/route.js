@@ -7,6 +7,14 @@ router.get("/test-me", function (req, res) {
     res.send("My first ever api!")
 })
 
+
+router.post("/createBook", UserController.createBook  )
+
+router.get("/getBooksData", UserController.getBooksInfo)
+
+
+
+
 router.post("/createUser", UserController.createUser  )
 
 router.get("/getUsersData", UserController.getUsersData)

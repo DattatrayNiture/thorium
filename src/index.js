@@ -7,12 +7,14 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//152.57.155.119/32 ==> ip address
 
-mongoose.connect("mongodb+srv://functionup-cohort:G0Loxqc9wFEGyEeJ@cluster0.rzotr.mongodb.net/Pritesh87698-DB?retryWrites=true&w=majority", {
-    useNewUrlParser: true
+mongoose.connect("mongodb+srv://Datta-database:D3443t1432@cluster0.gakoa.mongodb.net/FunctionUp?retryWrites=true&w=majority", {
+    useNewUrlParser: true //// to avoide the deprication warring
 })
 .then( () => console.log("MongoDb is connected"))
 .catch ( err => console.log(err) )
+
 
 app.use('/', route);
 
