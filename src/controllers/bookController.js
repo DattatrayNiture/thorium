@@ -1,24 +1,98 @@
+const { ObjectId } = require("bson")
 const { count } = require("console")
 const authorModel = require("../models/authorModel")
 const bookModel= require("../models/bookModel")
+const publisherModel = require("../models/publisherModel");
+//const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const createBook= async function (req, res) {
-    let book = req.body
-    let bookCreated = await bookModel.create(book)
-    res.send({data: bookCreated})
+     const{name,author,price,ratings,publisher} = req.body
+    
+    //  console.log(author);
+    //  console.log(authorid)
+     //by using we can check is this valid mongoDb ID
+     //const ObjectId = mongoose.Schema.Types.ObjectId
+    // !ObjectId.isValid(author)
+
+
+
+
+    // checking author validation
+    if(!author || !name || !price || !ratings || !publisher){
+        return res.status(422).send({msg:"auther details is required"});
+    }
+
+
+
+
+    //this line returns the object that matches with id
+    let isAuthorIdValid = await authorModel.findById(author)
+    // console.log(isAuthorIdValid)
+
+
+    if(!isAuthorIdValid ){
+        return res.status(422).send({msg:"autherId is not present or not matches with existing database"});
+           
+    }
+
+    
+    // if(ObjectId.isValid(author) ){
+    //     return res.status(422).send({msg:"autherId is not present or not matches with existing database"});
+           
+    // }
+    
+
+    //checking publisher validation
+    if(!publisher){
+       return res.status(422).send({msg:"publisher details is required"})
+    }
+    const isPublisherIdValid = await publisherModel.findById(publisher)
+
+    if(!isPublisherIdValid){
+        return res.status(422).send({msg:"PublisherId is not present"});
+            
+    }
+    
+    let bookCreated = await bookModel.create(req.body)
+    res.status(200).send({data: bookCreated})
 }
+
+// {
+//     _id: ObjectId("61951bfa4d9fe0d34da86344"),
+// name:"Two states",
+//     author:"61951bfa4d9fe0d34da86829",
+// price:50,
+//     ratings:4.5,
+//     publisher: "61951bfa4d9fe0d34da84523"
+// }
+
+
 
 const getBooksData= async function (req, res) {
     let books = await bookModel.find()
     res.send({data: books})
 }
 
-const getBooksWithAuthorDetails = async function (req, res) {
-    let specificBook = await bookModel.find().populate('author_id')
+const getBooksWithDetails = async function (req, res) {
+    let specificBook = await bookModel.find().populate('author publisher')
+    console.log(specificBook)
     res.send({data: specificBook})
 
 }
 
 module.exports.createBook= createBook
 module.exports.getBooksData= getBooksData
-module.exports.getBooksWithAuthorDetails = getBooksWithAuthorDetails
+module.exports.getBooksWithDetails = getBooksWithDetails
+
+
+
+
+
+// {
+//     "name":"Chetan Stories",
+//     "author":"621f68c1b33200bfd8b3c774",
+//     "price":44,
+//     "ratings":4.5,
+//     "publisher":"621f72fdb33200bfd8b3c77c"
+// }
+
