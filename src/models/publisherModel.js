@@ -1,12 +1,11 @@
 const mongoose = require('mongoose')
 
 
-
+// while sending new entry in collection when we are 
 const publisherSchema = new mongoose.Schema( {
     name:{
         type:String,
         required:true
-
     },
     headQuarter:{
         type:String,
@@ -15,7 +14,7 @@ const publisherSchema = new mongoose.Schema( {
 
 }, { timestamps: true });
 
-module.exports = mongoose.model('newPublisher', publisherSchema)
+module.exports = mongoose.model('newPublisher3', publisherSchema)
 
 // {
 //     "name":"IndianPublication",
@@ -24,6 +23,7 @@ module.exports = mongoose.model('newPublisher', publisherSchema)
 // {
 //     "name": "Penguin",
 //     "headQuarter": "New Delhi",
+//      "ratings":4.5
 //  }
 
 

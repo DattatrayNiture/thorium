@@ -1,6 +1,6 @@
 const { ObjectId } = require("bson")
 const { count } = require("console")
-const authorModel = require("../models/authorModel")
+const AuthorModel = require("../models/authorModel")
 const bookModel= require("../models/bookModel")
 const publisherModel = require("../models/publisherModel");
 //const ObjectId = mongoose.Schema.Types.ObjectId;
@@ -26,7 +26,7 @@ const createBook= async function (req, res) {
 
 
     //this line returns the object that matches with id
-    let isAuthorIdValid = await authorModel.findById(author)
+    let isAuthorIdValid = await AuthorModel.findById(author)
     // console.log(isAuthorIdValid)
 
 
@@ -66,6 +66,24 @@ const createBook= async function (req, res) {
 //     publisher: "61951bfa4d9fe0d34da84523"
 // }
 
+const putrequest = async function (req,res){
+    const Id = await publisherModel.find({$or: [{name:"Penguin"},{name:"HarperCollins"}]}).select({_id:1})
+    for(let i =0; i<Id.length; i++){
+         await bookModel.updateMany({publisher: Id[i]._id}, {isHardCover: true})
+    } 
+    res.send({msg:"changes is done"})
+    
+}
+const updatePriceByRatings = async function (req, res){
+    const author = await AuthorModel.find({ratings: {$gt : 3.5}}).select({_id: 1})
+    for (let i = 0; i < author.length; i++){
+        await bookModel.updateMany({author: {$eq: author[i]._id}},{$inc: {price: 10}}, {new:true})
+    }
+    res.send({status: "Done"})
+    //res.send(updatePrice)
+}
+
+
 
 
 const getBooksData= async function (req, res) {
@@ -83,6 +101,8 @@ const getBooksWithDetails = async function (req, res) {
 module.exports.createBook= createBook
 module.exports.getBooksData= getBooksData
 module.exports.getBooksWithDetails = getBooksWithDetails
+module.exports.putrequest= putrequest
+module.exports.updatePriceByRatings= updatePriceByRatings
 
 
 
@@ -96,3 +116,4 @@ module.exports.getBooksWithDetails = getBooksWithDetails
 //     "publisher":"621f72fdb33200bfd8b3c77c"
 // }
 
+// 1. routine , 2. studing & study graph  3.life change. 3. Background

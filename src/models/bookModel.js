@@ -10,7 +10,7 @@ const bookSchema = new mongoose.Schema( {
     } ,
     author: {
         type: ObjectId,
-        ref: "newAuthor"
+        ref: "newAuthor3"
     },
     price:{ 
         type:Number,
@@ -23,14 +23,18 @@ const bookSchema = new mongoose.Schema( {
     },
     publisher:{
         type:ObjectId,
-        ref:'newPublisher'
+        ref:'newPublisher3'
+    },
+    isHardCover:{
+        type: Boolean,
+        default:false
     }
 
 
 }, { timestamps: true });
 
 
-module.exports = mongoose.model('newBook2', bookSchema)
+module.exports = mongoose.model('newBook3', bookSchema)
 
 
 
