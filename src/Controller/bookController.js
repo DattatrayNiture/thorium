@@ -27,9 +27,8 @@ const createBook = async function (req, res) {
         .send({ status: false, message: "Bad request input field is empty" });
     }
 
-    const { title, excerpt, userId, ISBN, category, subcategory, reviews } =
-      data;
-    let { releasedAt } = data;
+    const { title, excerpt, userId, ISBN, category, reviews } =data;
+    let { releasedAt , subcategory } = data;
     //validation Starts
 
     if (!validator.isValid(title.trim())) {
@@ -122,13 +121,15 @@ const createBook = async function (req, res) {
         .status(400)
         .send({ status: false, message: "subcategory is not present in input field please provide" });
     }
-      console.log(subcategory,subcategory.length, typeof subcategory)
-    if (!subcategory.length ) {
+
+      console.log(typeof subcategory,subcategory.length, typeof subcategory)
+    if ( !Array.isArray(subcategory)) {
+      // subcategory = subcategory.split();
       return res
         .status(400)
-        .send({ status: false, message: "subcategory is empty" });
+        .send({ status: false, message: "either subcategory is empty or your sending in wrong format it only array of string" });
     }
-
+    
     req.body.subcategory = subcategory.filter(x => x.trim());
     if (data.subcategory.length == 0) { return res.status(400).send({ status: false, message: 'Subcategory is required' }) }
 
@@ -178,7 +179,7 @@ const createBook = async function (req, res) {
 
     const savedData = await bookModel.create(data);
     return res.status(201).send({
-      status: false,
+      status: true,
       messsage: "books created successfully",
       data: savedData,
     });

@@ -12,15 +12,20 @@ const authentication = async function (req, res, next) {
         .send({ status: false, message: "Please pass token" });
     }
 
+   // let decodedToken
+     
+    jwt.verify(token, secretkey, function ( error , decode) {
+      if(error) {
+        //setHeader("Content-Type", "text/JSON")
+        return res.status(400).setHeader("Content-Type", "text/JSON").send({status: false, message : error.message})
+        
+      }
+      next();
+      //decodedToken = decode;
 
-    let decodedToken = jwt.verify(token, secretkey);
-
-    if (!decodedToken) {
-      return res.status(400).send({ status: false, msg: "token is invalid" });
-    }
-   // const exp = decodedToken.exp;
-   
-    next();
+    });
+    
+    
   } catch (error) {
     return res.status(500).send({ status: false, message: error.message });
   }
@@ -37,13 +42,20 @@ const authorization = async function (req, res, next) {
       .status(404)
       .send({ status: false, message: "Please pass token" });
   }
+  let decodedToken ;
+   jwt.verify(token, secretkey, async function ( error , decode) {
+   if(error) {
+     return res.status(400).send({status: false, message : error.message});
+      
+     
+   }
+   decodedToken = decode
+  
 
-  let decodedToken = jwt.verify(token, secretkey);
 
   let bookId = req.params.bookId;
 
-  console.log(bookId)
-  console.log(!bookId);
+  
 
   if (!bookId) {
 
@@ -89,6 +101,8 @@ const authorization = async function (req, res, next) {
 
     }
   }
+  });
+  
 }catch(error){
 
   return res.status(500).send({status:false, message:error.message})

@@ -267,7 +267,7 @@ const loginUser = async function (req, res) {
       },
       "PROJECT3BOOKMANAGEMENTPROJECTDONYBYGROUP7",
       {
-        expiresIn: "1m",
+        expiresIn: "90m",
       }
     );
 
