@@ -107,24 +107,15 @@ const updateReviews = async (req, res) => {
     }
 
     let bookId = req.params.bookId;
-    // if (!bookId) bookId = req.query.bookId;
-    // if (!bookId) bookId = req.body.bookId;
-
-    // if (!validator.isValid(bookId)) {
-    //   return res.status(400).send({
-    //     status: false,
-    //     msg: "Bad request bookId is must please provide bookId ",
-    //   });
-    // }
+    
+    
 
     if (!validator.isValidObjectId(bookId)) {
       return res.status(400).send({ status: false, message: "Invalid bookId" });
     }
 
     let reviewId = req.params.reviewId;
-    // if (!reviewId) reviewId = req.query.reviewId;
-    // if (!reviewId) reviewId = req.body.reviewId;
-
+   
     if (!validator.isValid(reviewId)) {
       return res.status(400).send({
         status: false,
@@ -239,18 +230,6 @@ const deletedReview = async function (req, res) {
         msg: "No review is present",
       });
     }
-
-    // let isBookIdPresent = await bookModel.findOne({
-    //   _id: bookId,
-    //   isDeleted: false,
-    // });
-
-    // if (isBookIdPresent == null) {
-    //   return res.status(404).send({
-    //     status: false,
-    //     msg: "No book is found",
-    //   });
-    // }
 
     const isBookIdPresent = await bookModel.findOneAndUpdate(
       {

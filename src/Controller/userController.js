@@ -21,6 +21,7 @@ const registerUser = async function (req, res) {
       }
 
       let isName = /^[A-Za-z ]*$/;
+
       if (!isName.test(name)) {
         return res
           .status(422)
@@ -76,26 +77,8 @@ const registerUser = async function (req, res) {
           .send({ status: false, message: "email is not present in input request" });
       }
 
-      //  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+      
 
-      // if (!/^([a-z0-9\-]+)@([a-z-]+)(?=.*[.]{1,})([a-z]+)$/.test(email)) {
-      //   // @gmail.com
-      //   return res
-      //     .status(422)
-      //     .send({
-      //       status: false,
-      //       message: "email is invalid please enter valid email",
-      //     });
-      // }
-
-
-
-      //       const emailvalidator = require("email-validator");
-      // if(validator.validate(req.body.email)){
-      //       // Your call to model here
-      // }else{
-      //    res.status(400).send('Invalid Email');
-      // }
       if (!validatEmail.isEmail(email)) {
         return res.status(400).send({ status: false, msg: "BAD REQUEST email is invalid " })
 
@@ -126,25 +109,15 @@ const registerUser = async function (req, res) {
           .send({ status: false, message: "enter valid password" });
       }
 
-      //^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&*-]).{8,}$
-      //^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$
-      //^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&*-]).{8,}$
+      
       if (! /^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/.test(password)) {
         return res.status(400).send({
 
           status: false,
-          msg: "Please enter Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character"
+          msg: "Please enter Minimum eight characters password, at least one uppercase letter, one lowercase letter, one number and one special character"
 
         })
       }
-
-      //     At least one upper case English letter, (?=.*?[A-Z])
-      // At least one lower case English letter, (?=.*?[a-z])
-      // At least one digit, (?=.*?[0-9])
-      // At least one special character, (?=.?[#?!@$%^&-])
-      // Minimum eight in length .{8,} (with the anchors)
-
-
 
 
 
@@ -202,13 +175,14 @@ const registerUser = async function (req, res) {
           .send({ status: false, message: "enter valid city name " });
       }
     }
-    console.log(requestBody);
+    
     const userData = await userModel.create(requestBody);
     return res.status(201).send({
       status: true,
       message: "successfully saved user data",
       data: userData,
     });
+
   } catch (error) {
     return res.status(500).send({ status: false, Error: error.message });
   }
@@ -252,11 +226,11 @@ const loginUser = async function (req, res) {
     }
 
     let user = await userModel.findOne({ email: email, password: password });
-    console.log(user);
+    
     if (!user)
-      return res.status(400).send({
+      return res.status(404).send({
         status: false,
-        msg: "email or the password is not corerct",
+        msg: "email or the password is not corerct or user with this email is not present",
       });
      
     let token = jwt.sign(

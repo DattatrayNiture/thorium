@@ -8,7 +8,7 @@ const authentication = async function (req, res, next) {
     let token = req.headers["x-auth-token"];
     if (!token) {
       return res
-        .status(404)
+        .status(400)
         .send({ status: false, message: "Please pass token" });
     }
 
@@ -16,7 +16,7 @@ const authentication = async function (req, res, next) {
      
     jwt.verify(token, secretkey, function ( error , decode) {
       if(error) {
-        //setHeader("Content-Type", "text/JSON")
+        
         return res.status(400).setHeader("Content-Type", "text/JSON").send({status: false, message : error.message})
         
       }
@@ -39,7 +39,7 @@ const authorization = async function (req, res, next) {
 
   if (!token) {
     return res
-      .status(404)
+      .status(400)
       .send({ status: false, message: "Please pass token" });
   }
   let decodedToken ;
@@ -51,21 +51,17 @@ const authorization = async function (req, res, next) {
    }
    decodedToken = decode
   
-
-
   let bookId = req.params.bookId;
 
-  
 
   if (!bookId) {
 
-
-
     let userId = req.body.userId;
-    console.log(userId, decodedToken.userId, "1");
+    
     if (userId == decodedToken.userId) {
       next();
     } else {
+
       return res
         .status(401)
         .send({ status: false, message: "You are not authorized" });
@@ -86,11 +82,11 @@ const authorization = async function (req, res, next) {
     // console.log(bookIdPresent)
     if (!bookIdPresent) {
       return res
-        .status(400)
+        .status(404)
         .send({ status: false, msg: "Book id is not present" });
     }
 
-   // console.log(bookIdPresent.userId, decodedToken.userId, "2");
+   
     if (bookIdPresent.userId != decodedToken.userId) {
       return res
         .status(401)

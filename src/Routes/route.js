@@ -11,7 +11,8 @@ router.post("/login", userController.loginUser); //to create User
 
 //book controller
 router.post("/books",middleware.authorization,bookController.createBook);
-router.get("/books", middleware.authentication,bookController.getBook);
+router.get("/books",// middleware.authentication,
+bookController.getBook);
 router.get("/books/:bookId",middleware.authentication,bookController.getBookById);
 router.put("/books/:bookId",middleware.authorization,bookController.updateBook);
 router.delete("/books/:bookId",middleware.authorization,bookController.deleteById);
@@ -22,7 +23,7 @@ router.put("/books/:bookId/review/:reviewId", reviewController.updateReviews);
 router.delete("/books/:bookId/review/:reviewId",reviewController.deletedReview);
 
 router.get("*", function (req, res) {
-  res.status(404).send({ status: false, ERROR: "page not found" });
+  return res.status(404).send({ status: false, ERROR: "page not found" });
 });
 
 module.exports = router;
