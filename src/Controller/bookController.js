@@ -2,11 +2,117 @@ const bookModel = require("../models/bookModel");
 const validator = require("../validator/validator");
 const reviewModel = require("../models/reviewModel");
 const moment = require("moment");
+const aws = require("aws-sdk")
+
+
+
+aws.config.update(
+  {
+    accessKeyId: "AKIAY3L35MCRVFM24Q7U",
+    secretAccessKey: "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",
+    region: "ap-south-1"
+  }
+)
+
+let uploadFile = async (file) => {
+  return new Promise(async function (resolve, reject) {
+    
+    let s3 = new aws.S3({ apiVersion: "2006-03-01" }) //we will be using s3 service of aws
+    
+    var uploadParams = {
+      ACL: "public-read",
+      Bucket: "classroom-training-bucket", 
+      Key: "radhika/" + file.originalname, 
+      Body: file.buffer
+    }
+
+    s3.upload(uploadParams, function (err, data) {
+      if (err) {
+        return reject({ "error": err })
+      }
+
+      console.log(data)
+      console.log(" file uploaded succesfully ")
+      return resolve(data.Location) // HERE
+    })
+    
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 const createBook = async function (req, res) {
   try {
-    let data = req.body;
+    // console.log(req)
+    // console.log("next body ************************************")
+
+
+    const data = JSON.parse(req.body.data);
+    // console.log(typeof data)
+    // console.log(data.title)
+    // console.log(data.subcategory)
+
+    // console.log(req.body)
 
     if (!Object.keys(data).length) {
       return res
@@ -15,6 +121,7 @@ const createBook = async function (req, res) {
     }
 
     const { title, excerpt, userId, ISBN, category, reviews } = data;
+
 
     let { releasedAt, subcategory } = data;
     //validation Starts
@@ -116,7 +223,7 @@ const createBook = async function (req, res) {
         .send({ status: false, message: "either subcategory is empty or your sending in wrong format it accept only array of string" });
     }
 
-    req.body.subcategory = subcategory.filter(x => x.trim());
+    data.subcategory = subcategory.filter(x => x.trim());
     if (data.subcategory.length == 0) { return res.status(400).send({ status: false, message: 'Subcategory is required' }) }
 
 
@@ -153,6 +260,18 @@ const createBook = async function (req, res) {
     }
 
 
+    let uploadedFileURL;
+
+    let files = req.files // file is the array
+    if (files && files.length > 0) {
+
+      uploadedFileURL = await uploadFile(files[0])
+
+    }
+    else {
+      return res.status(400).send({ msg: "No file found in request" })
+    }
+    data.bookCover = uploadedFileURL;
 
     // const B = moment(releasedAt, "YYYY-MM-DD").add(1, "days");
     // console.log(B);
@@ -269,10 +388,10 @@ const getBookById = async (req, res) => {
         rating: 1,
         review: 1,
       });
-      const BookReviewObj = {
-        bookData,
-        reviewsData : reviews
-      }
+    const BookReviewObj = {
+      bookData,
+      reviewsData: reviews
+    }
 
     return res
       .status(200)
@@ -442,7 +561,7 @@ const updateBook = async function (req, res) {
       updateData,
       { new: true }
     );
-    
+
     let newUpdate = await bookModel.find({ _id: bookId, isDeleted: false });
 
     if (!newUpdate.length) {
@@ -455,7 +574,7 @@ const updateBook = async function (req, res) {
     return res.status(200).send({
       status: true,
       message: "updated successfully",
-      data:newUpdate,
+      data: newUpdate,
     });
   } catch (error) {
     return res.status(500).send({ status: false, Error: error.message });
@@ -481,7 +600,7 @@ const deleteById = async function (req, res) {
       { new: true }
     );
 
-  
+
     if (!deletedBook) {
       return res.status(404).send({ status: false, message: "book not found" });
     }

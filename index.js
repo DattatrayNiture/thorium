@@ -5,9 +5,11 @@ const bodyParser = require('body-parser');
 const routes = require('./src/Routes/route.js');
 const { default: mongoose } = require('mongoose');
 const app = express();
+const multer = require("multer")
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(multer().any())
 
 
 mongoose.connect("mongodb+srv://taabish:lkmgsyjhwbQYgkvX@cluster0.cp3ka.mongodb.net/group7Database?authSource=admin&replicaSet=atlas-12xyw4-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true", {
