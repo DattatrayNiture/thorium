@@ -16,7 +16,8 @@ aws.config.update(
 
 let uploadFile = async (file) => {
   return new Promise(async function (resolve, reject) {
-    
+   // Promise.reject(reason) Returns a new Promise object that is rejected with the given reason.
+   // Promise.resolve(value) Returns a new Promise object that is resolved with the given value.
     let s3 = new aws.S3({ apiVersion: "2006-03-01" }) //we will be using s3 service of aws
     
     var uploadParams = {
